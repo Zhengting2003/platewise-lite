@@ -7,73 +7,63 @@ import TopBar from "../components/TopBar";
 export default function Home() {
   const navigate = useNavigate();
 
-  const urgentItems = mockFoodItems.filter((item) => item.urgent);
-
   return (
     <div className="screen">
       <TopBar badge="Waste less" />
 
-      <div className="eyebrow">Good afternoon</div>
-
-      <h1>
-        Eat what you
-        <br />
-        already have.
-      </h1>
-
-      <p className="subtitle">
-        PlateWise helps you decide what to eat first, so less food goes to waste.
-      </p>
-
       <div className="hero">
-        <div className="hero-content">
-          <div className="hero-kicker">
-            <span>●</span>
-            Fridge check
-          </div>
+        <div className="hero-kicker">
+          <span>✦</span>
+          Smart food decisions
+        </div>
 
-          <h2>
-            {urgentItems.length} items need your attention.
-          </h2>
+        <h1>What should I eat first?</h1>
 
-          <p>
-            Your {urgentItems.map((item) => item.name.toLowerCase()).join(" and ")}
-            {" "}should be used soon.
-          </p>
+        <p>
+          Let PlateWise help you use the food that needs
+          attention first.
+        </p>
 
-          <button
-            className="hero-action"
-            onClick={() => navigate("/scan")}
-          >
-            Help me decide
-            <span>→</span>
-          </button>
+        <div className="hero-illustration">
+          🥗
         </div>
       </div>
 
-      <div className="section-header">
-        <h2>Your fridge</h2>
-        <span className="section-link">
-          {mockFoodItems.length} items
-        </span>
-      </div>
+      <button
+        className="btn-primary"
+        onClick={() => navigate("/scan")}
+      >
+        🍽️ Help me decide
+      </button>
 
-      <div className="fridge-card">
+      <div className="card">
+        <div className="card-header">
+          <h2>Your fridge</h2>
+
+          <span className="card-small-label">
+            4 items
+          </span>
+        </div>
+
         {mockFoodItems.map((item) => (
           <div className="food-item" key={item.id}>
             <div className="food-left">
-              <div className="food-icon">{item.icon}</div>
-
-              <div>
-                <div className="food-name">{item.name}</div>
-                <div className="food-meta">
-                  {item.urgent ? "Use soon" : "Still fresh"}
-                </div>
+              <div className="food-icon">
+                {item.icon}
               </div>
+
+              <span className="name">
+                {item.name}
+              </span>
             </div>
 
-            <span className={`expiry ${item.urgent ? "urgent" : ""}`}>
-              {item.expiresIn}d left
+            <span
+              className={`expiry ${
+                item.urgent ? "urgent" : ""
+              }`}
+            >
+              {item.urgent ? "⚠ " : ""}
+              {item.expiresIn}d
             </span>
           </div>
         ))}

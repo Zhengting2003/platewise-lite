@@ -4,135 +4,94 @@ import SimulatedTag from "../components/SimulatedTag";
 import TopBar from "../components/TopBar";
 
 export default function Profile() {
-  const [notifications, setNotifications] = useState(true);
-  const [stickerPrice, setStickerPrice] = useState("0.50");
+  const [notifications, setNotifications] =
+    useState(true);
+
+  const [stickerPrice, setStickerPrice] =
+    useState("0.50");
 
   return (
     <div className="screen">
       <TopBar badge="Profile" />
 
-      <div className="eyebrow">Your account</div>
-
       <h1>Profile</h1>
 
       <p className="subtitle">
-        Make PlateWise work the way you like.
+        Make PlateWise work better for you.
       </p>
 
-      <div className="profile-head">
-        <div className="avatar">M</div>
-
-        <div>
-          <div className="profile-name">
-            Mei
+      <div className="card">
+        <div className="profile-card">
+          <div className="avatar">
+            M
           </div>
 
-          <div className="profile-type">
-            Shared apartment · Member
+          <div>
+            <div className="profile-name">
+              Mei
+            </div>
+
+            <div className="profile-description">
+              Shared apartment · 21
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="settings-group">
-        <div className="settings-title">
-          Preferences
-        </div>
+      <div className="card">
+        <h2>Preferences</h2>
 
-        <div className="settings-card">
-          <div className="setting-row">
-            <div className="setting-icon">🔔</div>
-
-            <div className="setting-content">
-              <div className="setting-label">
-                Expiry reminders
-              </div>
-
-              <div className="setting-description">
-                Get reminded before food expires
-              </div>
+        <div className="setting-row">
+          <div>
+            <div className="setting-title">
+              Expiry reminders
             </div>
 
-            <button
-              className={`toggle ${
-                notifications ? "active" : ""
-              }`}
-              onClick={() =>
-                setNotifications(!notifications)
-              }
-              aria-label="Toggle notifications"
-            >
-              <div className="toggle-knob" />
-            </button>
-          </div>
-
-          <div className="setting-row">
-            <div className="setting-icon">🏷️</div>
-
-            <div className="setting-content">
-              <div className="setting-label">
-                Sticker price
-              </div>
-
-              <div className="setting-description">
-                Cost used for savings estimates
-              </div>
+            <div className="setting-description">
+              Remind me before food expires
             </div>
-
-            <input
-              className="setting-input"
-              type="number"
-              step="0.10"
-              value={stickerPrice}
-              onChange={(e) =>
-                setStickerPrice(e.target.value)
-              }
-            />
           </div>
+
+          <button
+            className={`toggle ${
+              notifications ? "active" : ""
+            }`}
+            onClick={() =>
+              setNotifications(
+                (value) => !value
+              )
+            }
+            aria-label="Toggle notifications"
+          >
+            <span className="toggle-circle" />
+          </button>
         </div>
       </div>
 
-      <div className="settings-group">
-        <div className="settings-title">
-          About
-        </div>
+      <div className="card">
+        <h2>Sticker price</h2>
 
-        <div className="settings-card">
-          <div className="setting-row">
-            <div className="setting-icon">🌿</div>
+        <p
+          style={{
+            color: "#718078",
+            fontSize: 12,
+            marginTop: 5,
+          }}
+        >
+          Used when calculating your savings.
+        </p>
 
-            <div className="setting-content">
-              <div className="setting-label">
-                Sustainability
-              </div>
-
-              <div className="setting-description">
-                Every meal is a chance to waste less
-              </div>
-            </div>
-
-            <span className="setting-value">
-              ♡
-            </span>
-          </div>
-
-          <div className="setting-row">
-            <div className="setting-icon">ℹ️</div>
-
-            <div className="setting-content">
-              <div className="setting-label">
-                About PlateWise
-              </div>
-
-              <div className="setting-description">
-                Smart food decisions made simple
-              </div>
-            </div>
-
-            <span className="setting-value">
-              v1.0
-            </span>
-          </div>
-        </div>
+        <input
+          className="input"
+          type="number"
+          step="0.10"
+          value={stickerPrice}
+          onChange={(event) =>
+            setStickerPrice(
+              event.target.value
+            )
+          }
+        />
       </div>
 
       <SimulatedTag text="Settings are stored locally in this prototype." />

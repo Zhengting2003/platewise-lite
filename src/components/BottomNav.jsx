@@ -10,7 +10,7 @@ export default function BottomNav() {
       </NavLink>
 
       <NavLink to="/stats">
-        <span className="icon">◔</span>
+        <span className="icon">◒</span>
         <span>Impact</span>
       </NavLink>
 

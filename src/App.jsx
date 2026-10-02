@@ -4,6 +4,7 @@ import {
   Routes,
   Route,
   useLocation,
+  Navigate,
 } from "react-router-dom";
 
 import Home from "./pages/Home";
@@ -12,6 +13,7 @@ import Decision from "./pages/Decision";
 import Completion from "./pages/Completion";
 import Stats from "./pages/Stats";
 import Profile from "./pages/Profile";
+
 import BottomNav from "./components/BottomNav";
 
 function AppContent() {
@@ -51,6 +53,12 @@ function AppContent() {
         <Route
           path="/profile"
           element={<Profile />}
+        />
+
+        {/* 防止未知 URL 出现空白页面 */}
+        <Route
+          path="*"
+          element={<Navigate to="/" replace />}
         />
       </Routes>
 

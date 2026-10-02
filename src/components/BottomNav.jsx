@@ -4,15 +4,15 @@ export default function BottomNav() {
   return (
     <nav className="bottom-nav">
       <NavLink to="/" end>
-        <span>🏠</span>
+        <span className="icon">🏠</span>
         <span>Home</span>
       </NavLink>
       <NavLink to="/stats">
-        <span>📊</span>
+        <span className="icon">📊</span>
         <span>Stats</span>
       </NavLink>
       <NavLink to="/profile">
-        <span>👤</span>
+        <span className="icon">👤</span>
         <span>Profile</span>
       </NavLink>
     </nav>

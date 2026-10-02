@@ -7,8 +7,12 @@ export default function Completion() {
 
   return (
     <div className="screen">
-      <h1>Finished!</h1>
-      <p>Nice work. Your food inventory has been updated.</p>
+      <div className="success-icon">🎉</div>
+
+      <div className="center">
+        <h1>Finished!</h1>
+        <p className="subtitle">Nice work. Your food inventory has been updated.</p>
+      </div>
 
       <div className="stat-box">
         <div className="value">RM {mockStats.savedThisWeek.toFixed(2)}</div>

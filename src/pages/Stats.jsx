@@ -1,14 +1,17 @@
 import { mockStats } from "../data/mockData";
 import SimulatedTag from "../components/SimulatedTag";
+import TopBar from "../components/TopBar";
 
 export default function Stats() {
   return (
     <div className="screen">
-      <h1>Your Stats</h1>
+      <TopBar badge="Stats" />
+      <h1>Your impact</h1>
+      <p className="subtitle">A quick look at what you've saved this week.</p>
 
       <div className="stat-box">
         <div className="value">RM {mockStats.savedThisWeek.toFixed(2)}</div>
-        <div className="label">Saved this week</div>
+        <div className="label">Money saved</div>
       </div>
 
       <div className="stat-box">

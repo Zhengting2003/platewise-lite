@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Html5Qrcode } from "html5-qrcode";
@@ -20,20 +19,14 @@ export default function Scan() {
 
   useEffect(() => {
     mountedRef.current = true;
-
     return () => {
       mountedRef.current = false;
     };
   }, []);
 
-  /* ========================================
-     SIMULATED SCAN
-  ======================================== */
-
+  /* SIMULATED SCAN */
   useEffect(() => {
-    if (mode !== "simulated") {
-      return;
-    }
+    if (mode !== "simulated") return;
 
     setProgress(0);
     setScanResult("");
@@ -41,90 +34,60 @@ export default function Scan() {
     const timer = setInterval(() => {
       setProgress((current) => {
         const next = current + 10;
-
         if (next >= 100) {
           clearInterval(timer);
-
           setTimeout(() => {
             if (mountedRef.current) {
               setScanResult("Leftover rice");
             }
           }, 150);
-
           return 100;
         }
-
         return next;
       });
     }, 100);
 
-    return () => {
-      clearInterval(timer);
-    };
+    return () => clearInterval(timer);
   }, [mode]);
 
-  /* ========================================
-     CAMERA SCANNER
-  ======================================== */
-
+  /* CAMERA SCANNER */
   useEffect(() => {
-    if (mode !== "camera") {
-      return;
-    }
+    if (mode !== "camera") return;
 
     let cancelled = false;
 
     const startScanner = async () => {
       try {
         const scanner = new Html5Qrcode("qr-reader");
-
         scannerRef.current = scanner;
 
         await scanner.start(
-          {
-            facingMode: "environment",
-          },
-          {
-            fps: 10,
-            qrbox: {
-              width: 250,
-              height: 250,
-            },
-          },
+          { facingMode: "environment" },
+          { fps: 10, qrbox: { width: 250, height: 250 } },
           async (decodedText) => {
-            if (cancelled) {
-              return;
-            }
+            if (cancelled) return;
 
             let result = decodedText;
-
             if (result.startsWith("platewise://")) {
-              result = result.replace(
-                "platewise://",
-                ""
-              );
+              result = result.replace("platewise://", "");
             }
+            result = result.replace(/_/g, " ");
 
             try {
               await scanner.stop();
-            } catch {
-              // scanner may already be stopped
-            }
+            } catch {}
 
             if (!cancelled && mountedRef.current) {
               setScanResult(result);
             }
           },
-          () => {
-            // Ignore normal QR scanning errors
-          }
+          () => {}
         );
       } catch (error) {
         if (!cancelled && mountedRef.current) {
           setErrorMsg(
             "Camera is not available. You can enter the food manually instead."
           );
-
           setMode("manual");
         }
       }
@@ -134,33 +97,22 @@ export default function Scan() {
 
     return () => {
       cancelled = true;
-
       const cleanup = async () => {
         if (scannerRef.current) {
           try {
             await scannerRef.current.stop();
-          } catch {
-            // already stopped
-          }
-
+          } catch {}
           try {
             await scannerRef.current.clear();
-          } catch {
-            // already cleared
-          }
-
+          } catch {}
           scannerRef.current = null;
         }
       };
-
       cleanup();
     };
   }, [mode]);
 
-  /* ========================================
-     RESET
-  ======================================== */
-
+  /* RESET */
   const reset = () => {
     setMode("choose");
     setProgress(0);
@@ -169,26 +121,16 @@ export default function Scan() {
     setErrorMsg("");
   };
 
-  /* ========================================
-     CONTINUE
-  ======================================== */
-
+  /* CONTINUE */
   const continueToDecision = () => {
-    if (!scanResult) {
-      return;
-    }
+    if (!scanResult) return;
 
     navigate("/decision", {
-      state: {
-        food: scanResult,
-      },
+      state: { food: scanResult },
     });
   };
 
-  /* ========================================
-     RENDER
-  ======================================== */
-
+  /* RENDER */
   return (
     <div className="screen">
       <TopBar badge="Scan" />
@@ -196,72 +138,40 @@ export default function Scan() {
       {!scanResult && (
         <>
           <h1>Scan your food</h1>
-
           <p className="subtitle">
-            Add an item and PlateWise will help you
-            decide what to eat first.
+            Add an item and PlateWise will help you decide what to eat
+            first.
           </p>
         </>
       )}
 
-      {/* CHOOSE MODE */}
-
+      {/* CHOOSE */}
       {mode === "choose" && !scanResult && (
         <>
-          <div
-            className="mode-card"
-            onClick={() => setMode("camera")}
-          >
+          <div className="mode-card" onClick={() => setMode("camera")}>
             <span className="emoji">📷</span>
-
             <div className="text">
-              <div className="title">
-                Scan QR Code
-              </div>
-
-              <div className="desc">
-                Scan a PlateWise food sticker
-              </div>
+              <div className="title">Scan QR Code</div>
+              <div className="desc">Scan a PlateWise food sticker</div>
             </div>
-
             <span className="mode-arrow">›</span>
           </div>
 
-          <div
-            className="mode-card"
-            onClick={() => setMode("manual")}
-          >
+          <div className="mode-card" onClick={() => setMode("manual")}>
             <span className="emoji">✍️</span>
-
             <div className="text">
-              <div className="title">
-                Enter manually
-              </div>
-
-              <div className="desc">
-                Type the food name yourself
-              </div>
+              <div className="title">Enter manually</div>
+              <div className="desc">Type the food name yourself</div>
             </div>
-
             <span className="mode-arrow">›</span>
           </div>
 
-          <div
-            className="mode-card"
-            onClick={() => setMode("simulated")}
-          >
+          <div className="mode-card" onClick={() => setMode("simulated")}>
             <span className="emoji">✨</span>
-
             <div className="text">
-              <div className="title">
-                Demo scan
-              </div>
-
-              <div className="desc">
-                Try the prototype without a camera
-              </div>
+              <div className="title">Demo scan</div>
+              <div className="desc">Try the prototype without a camera</div>
             </div>
-
             <span className="mode-arrow">›</span>
           </div>
 
@@ -270,7 +180,6 @@ export default function Scan() {
       )}
 
       {/* CAMERA */}
-
       {mode === "camera" && !scanResult && (
         <>
           <div id="qr-reader"></div>
@@ -280,16 +189,9 @@ export default function Scan() {
             Looking for a QR code...
           </div>
 
-          {errorMsg && (
-            <div className="error-message">
-              {errorMsg}
-            </div>
-          )}
+          {errorMsg && <div className="error-message">{errorMsg}</div>}
 
-          <button
-            className="btn-secondary"
-            onClick={reset}
-          >
+          <button className="btn-secondary" onClick={reset}>
             ← Back
           </button>
 
@@ -298,7 +200,6 @@ export default function Scan() {
       )}
 
       {/* MANUAL */}
-
       {mode === "manual" && !scanResult && (
         <>
           <div className="card">
@@ -309,27 +210,20 @@ export default function Scan() {
               type="text"
               placeholder="e.g. Leftover rice"
               value={manualInput}
-              onChange={(event) =>
-                setManualInput(event.target.value)
-              }
+              onChange={(event) => setManualInput(event.target.value)}
               autoFocus
             />
 
             <button
               className="btn-primary"
               disabled={!manualInput.trim()}
-              onClick={() =>
-                setScanResult(manualInput.trim())
-              }
+              onClick={() => setScanResult(manualInput.trim())}
             >
               Confirm food
             </button>
           </div>
 
-          <button
-            className="btn-secondary"
-            onClick={reset}
-          >
+          <button className="btn-secondary" onClick={reset}>
             ← Back
           </button>
 
@@ -338,7 +232,6 @@ export default function Scan() {
       )}
 
       {/* SIMULATED */}
-
       {mode === "simulated" && !scanResult && (
         <>
           <div className="progress-container">
@@ -350,17 +243,12 @@ export default function Scan() {
             <div className="progress-bar">
               <div
                 className="progress-fill"
-                style={{
-                  width: `${progress}%`,
-                }}
+                style={{ width: `${progress}%` }}
               />
             </div>
           </div>
 
-          <button
-            className="btn-secondary"
-            onClick={reset}
-          >
+          <button className="btn-secondary" onClick={reset}>
             Cancel
           </button>
 
@@ -369,16 +257,12 @@ export default function Scan() {
       )}
 
       {/* RESULT */}
-
       {scanResult && (
         <>
-          <div className="success-icon">
-            ✓
-          </div>
+          <div className="success-icon">✓</div>
 
           <div className="center">
             <h1>Food detected</h1>
-
             <p
               className="subtitle"
               style={{
@@ -391,17 +275,11 @@ export default function Scan() {
             </p>
           </div>
 
-          <button
-            className="btn-primary"
-            onClick={continueToDecision}
-          >
+          <button className="btn-primary" onClick={continueToDecision}>
             Continue
           </button>
 
-          <button
-            className="btn-secondary"
-            onClick={reset}
-          >
+          <button className="btn-secondary" onClick={reset}>
             Scan another
           </button>
         </>
@@ -409,4 +287,3 @@ export default function Scan() {
     </div>
   );
 }
-
